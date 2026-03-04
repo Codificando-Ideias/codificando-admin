@@ -1,0 +1,78 @@
+body {
+  margin: 0;
+  background: radial-gradient(circle at 20% 20%, #1e293b, #0f172a 60%);
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+.login-wrapper {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  width: 380px;
+  padding: 40px 30px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.2);
+  color: #fff;
+}
+
+.logo-area {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo-area img {
+  height: 150px;
+  margin-bottom: 10px;
+}
+
+.logo-area .login-title {
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.logo-login:hover {
+  transform: scale(1.05);
+}
+
+.form-control {
+  background-color: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.form-control::placeholder {
+  color: rgba(255,255,255,0.55);
+  opacity: 1;
+}
+
+.form-control:focus {
+  background-color: rgba(255,255,255,0.08);
+  border-color: #7C3AED;
+  box-shadow: none;
+  color: #fff;
+}
+
+.btn-gradient {
+  background: linear-gradient(45deg, #2563EB, #7C3AED);
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-gradient:hover {
+  opacity: 0.9;
+}
+
+.footer-text {
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 20px;
+  opacity: 0.6;
+}

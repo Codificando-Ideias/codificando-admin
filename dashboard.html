@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard - Codificando Ideias</title>
+
+ <!-- Favicon -->
+    <link rel="icon" href="../assets/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<link href="../css/dashboard.css" rel="stylesheet">
+
+</head>
+
+<body class="text-light">
+
+<div class="container-fluid px-4 py-4">
+
+<!-- HEADER -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+  <!-- Título -->
+  <h3 class="fw-bold mb-0">
+    <i class="bi bi-bar-chart-line-fill me-2"></i>
+    Dashboard Estratégico
+  </h3>
+
+  <!-- Ações -->
+  <div class="d-flex align-items-center gap-4">
+
+    <!-- Filtro -->
+    <select id="filtroStatus"
+            class="form-select bg-dark text-light border-secondary"
+            style="width: 180px;">
+      <option value="">Todos Status</option>
+      <option value="Novo">Novo</option>
+      <option value="Contato">Contato</option>
+      <option value="Proposta">Proposta</option>
+      <option value="Contrato">Contrato</option>
+      <option value="Fechado">Fechado</option>
+    </select>
+
+    <!-- Usuário Dropdown -->
+    <div class="dropdown">
+      <button class="btn btn-dark border-secondary d-flex align-items-center gap-2 dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+
+        <i class="bi bi-person-circle fs-5"></i>
+        <span id="adminNome">Admin</span>
+      </button>
+
+      <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary">
+        <li>
+          <button class="dropdown-item text-light bg-dark"
+                  onclick="logout()">
+            <i class="bi bi-box-arrow-right me-2"></i>
+            Sair
+          </button>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+  <!-- KPIs PRINCIPAIS -->
+  <div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+      <div class="card card-dark p-3 h-100">
+        <div class="section-title">Total Leads</div>
+        <h3 id="totalLeads" class="mt-2 text-white">0</h3>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card card-dark p-3 h-100">
+        <div class="section-title">Receita Inicial</div>
+        <h3 id="valorInicial" class="mt-2 text-info">R$ 0</h3>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card card-dark p-3 h-100">
+        <div class="section-title">Receita Recorrente</div>
+        <h3 id="valorMensal" class="mt-2 text-success">R$ 0</h3>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card card-dark p-3 h-100">
+        <div class="section-title">Projeção 12 Meses</div>
+        <h3 id="valor12Meses" class="mt-2 text-warning">R$ 0</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MÉTRICAS SECUNDÁRIAS -->
+  <div class="row g-4 mb-4">
+
+    <div class="col-md-6">
+      <div class="card card-dark p-3">
+        <div class="section-title">Ticket Médio</div>
+        <h4 id="ticketMedio" class="mt-2 text-white">R$ 0</h4>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card card-dark p-3">
+        <div class="section-title">% Leads Recorrentes</div>
+        <h4 id="percentualRecorrente" class="mt-2 text-white">0%</h4>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GRÁFICOS PRINCIPAIS -->
+  <div class="row g-4 mb-4">
+
+    <div class="col-lg-6">
+      <div class="card card-dark p-4">
+        <div class="section-title mb-3">Modelo de Contratação</div>
+        <canvas id="graficoModelo"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+  <div class="card card-dark p-4 h-100">
+
+   <div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="section-title mb-0">
+    <i class="bi bi-bar-chart-fill me-2"></i>
+    Ranking por Tipo de Sistema
+  </div>
+
+  <div class="d-flex gap-2">
+
+    <select id="modoGraficoTipo"
+            class="form-select form-select-sm bg-dark text-light border-secondary"
+            style="width: 140px;">
+      <option value="quantidade">Quantidade</option>
+      <option value="receita">Receita</option>
+    </select>
+
+    <select id="filtroGraficoTipo"
+            class="form-select form-select-sm bg-dark text-light border-secondary"
+            style="width: 130px;">
+      <option value="geral">Geral</option>
+      <option value="ano">Ano Atual</option>
+    </select>
+
+  </div>
+</div>
+
+    <canvas id="graficoTipo"></canvas>
+
+  </div>
+</div>
+  </div>
+
+  <!-- GRÁFICOS SECUNDÁRIOS -->
+  <div class="row g-4 mb-4">
+
+    <div class="col-lg-6">
+      <div class="card card-dark p-4">
+        <div class="section-title mb-3">Leads por Mês</div>
+        <canvas id="graficoTemporal"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card card-dark p-4">
+        <div class="section-title mb-3">Conversão (Status)</div>
+        <canvas id="graficoConversao"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- META -->
+  <div class="card card-dark p-4 mb-4">
+  <div class="section-title mb-3">Meta Anual</div>
+  <div class="progress" style="height: 26px;">
+    <div id="barraMetaAnual" class="progress-bar bg-info"
+         style="width: 0%">0%</div>
+  </div>
+  <small id="textoMetaAnual" class="mt-2 d-block text-white"></small>
+</div>
+
+<div class="card card-dark p-4 mb-4">
+  <div class="section-title mb-3">Meta Recorrente Mensal</div>
+  <div class="progress" style="height: 26px;">
+    <div id="barraMetaRecorrente" class="progress-bar bg-success"
+         style="width: 0%">0%</div>
+  </div>
+  <small id="textoMetaRecorrente" class="mt-2 d-block text-white"></small>
+</div>
+
+<!-- TABELA -->
+<div class="card card-dark p-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="section-title mb-0">
+      <i class="bi bi-people-fill me-2"></i>Leads
+    </div>
+
+    <div class="d-flex gap-2">
+
+      <input type="text"
+             id="searchInput"
+             class="form-control form-control-sm bg-dark text-light border-secondary"
+             placeholder="Buscar nome ou email"
+             style="width: 220px;">
+
+      <select id="filtroStatusTabela"
+              class="form-select form-select-sm bg-dark text-light border-secondary"
+              style="width: 150px;">
+        <option value="">Status</option>
+        <option>Novo</option>
+        <option>Contato</option>
+        <option>Proposta</option>
+        <option>Contrato</option>
+        <option>Fechado</option>
+      </select>
+
+      <select id="filtroTipoTabela"
+              class="form-select form-select-sm bg-dark text-light border-secondary"
+              style="width: 180px;">
+        <option value="">Tipo</option>
+        <option>Site Institucional</option>
+        <option>Sistema Personalizado</option>
+        <option>Plataforma de Gestão</option>
+        <option>Solução com Inteligência Artificial</option>
+      </select>
+
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th data-sort="nome" style="cursor:pointer;">
+            <i class="bi bi-person me-1"></i>Nome
+          </th>
+          <th data-sort="tipo_sistema" style="cursor:pointer;">
+            <i class="bi bi-diagram-3 me-1"></i>Tipo
+          </th>
+          <th data-sort="modelo_contratacao" style="cursor:pointer;">
+            <i class="bi bi-briefcase me-1"></i>Modelo
+          </th>
+          <th>
+            <i class="bi bi-currency-dollar me-1"></i>Estimativa
+          </th>
+          <th data-sort="status" style="cursor:pointer;">
+            <i class="bi bi-flag me-1"></i>Status
+          </th>
+          <th class="text-center">
+            <i class="bi bi-gear"></i>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="leadsTable"></tbody>
+    </table>
+  </div>
+
+  <!-- PAGINAÇÃO -->
+  <nav class="mt-3">
+    <ul class="pagination pagination-sm justify-content-end mb-0"
+        id="pagination"></ul>
+  </nav>
+
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="leadModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-dark text-light border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Detalhes do Lead</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="leadDetalhes"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+  <div id="liveToast" class="toast align-items-center text-bg-success border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body">
+        Mensagem enviada com sucesso!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/configSettings.js"></script>
+<script src="../js/login/supabaseClient.js"></script>
+
+<script src="../js/compartilhar-whatsapp.js"></script>
+<script src="../js/compartilhar-email.js"></script>
+<script src="../js/toast.js"></script>
+
+<script src="../js/dashboard-detalhes.js"></script>
+<script src="../js/dashboard-calculos.js"></script>
+
+<script src="../js/dashboard.js"></script>
+<script src="../js/documentosPdf.js"></script>
+</body>
+</html>

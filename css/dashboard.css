@@ -1,0 +1,19 @@
+body {
+  background: #0f172a;
+}
+
+.card-dark {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+}
+
+.section-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #cbd5e1;
+}
+
+.table-dark {
+  background: #1e293b;
+}
