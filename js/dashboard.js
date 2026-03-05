@@ -598,7 +598,13 @@ function atualizarMetaRecorrente(totalMensal) {
     `R$ ${totalMensal.toLocaleString()} de R$ ${META_RECORRENTE_MENSAL.toLocaleString()}`;
 }
 
-async function atualizarStatus(id) {
+async function atualizarStatus(leadAtual) {
+console.log("Atualizando status para lead:", leadAtual);
+
+if (!leadAtual?.id) {
+    console.error("Lead inválido:", leadAtual);
+    return;
+  }
 
   const novoStatus =
     document.getElementById("statusSelect").value;
@@ -609,7 +615,7 @@ async function atualizarStatus(id) {
     const { error } = await supabaseLogin
       .from("leads")
       .update({ status: novoStatus })
-      .eq("id", id);
+      .eq("id", leadAtual.id);
 
     if (error) throw error;
     
@@ -617,7 +623,7 @@ async function atualizarStatus(id) {
     const { data: cliente } = await supabaseLogin
     .from("clientes")
     .select("id")
-    .eq("lead_id", id)
+    .eq("lead_id", leadAtual.id)
     .maybeSingle();
 
   if (cliente) {
@@ -628,13 +634,17 @@ async function atualizarStatus(id) {
       .eq("id", cliente.id);
 
   }
-    if (cliente) throw cliente;
 
     // ======================
     // 📝 Proposta
     // ======================
     if (novoStatus === "Proposta") {
-      await liberarPortal(id);
+      await gerarPropostaPDF(leadAtual);
+      await liberarPortal(leadAtual.id);
+    }
+
+    if (novoStatus === "Contrato") {
+      await gerarContratoPDF(leadAtual);
     }
 
     showToast("Status atualizado com sucesso");
@@ -649,7 +659,7 @@ async function atualizarStatus(id) {
   } catch (error) {
 
     console.error(error);
-    showToast("Erro ao atualizar status");
+    showToast("Erro ao atualizar status",false);
 
   }
 

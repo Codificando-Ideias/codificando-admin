@@ -1,7 +1,7 @@
 async function gerarNumeroProposta() {
 
   const ano = new Date().getFullYear();
-
+  console.log("Gerando número proposta para ano:", ano);
   const response = await fetch(
     `${SUPABASE_URL}/rest/v1/leads?select=numero_proposta&order=created_at.desc&limit=1`,
     {
@@ -13,21 +13,39 @@ async function gerarNumeroProposta() {
   );
 
   const data = await response.json();
-
+  console.log("Último número proposta encontrado:", data[0]?.numero_proposta);
   let sequencial = 1;
 
-  if (data.length && data[0].numero_proposta) {
+  if (data?.length && data[0]?.numero_proposta) {
     const ultimoNumero = data[0].numero_proposta;
     const ultimoSequencial = parseInt(ultimoNumero.split("-")[2]);
     sequencial = ultimoSequencial + 1;
   }
 
   const numeroFormatado = String(sequencial).padStart(4, "0");
-
+console.log("Número sequencial formatado:", numeroFormatado);
   return `CI-${ano}-${numeroFormatado}`;
 }
 
 async function gerarPropostaPDF(lead) {
+
+if (!lead?.id) {
+    console.error("Lead inválido:", lead);
+    return;
+  }
+// ================= VERIFICAR PROPOSTA EXISTENTE =================
+const { data: clienteExistente } = await window.supabaseClient
+  .from("clientes")
+  .select("proposta_url")
+  .eq("lead_id", lead.id)
+  .maybeSingle();
+
+if (clienteExistente?.proposta_url) {
+
+  visualizarProposta(lead.id);
+
+  return;
+}
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -104,21 +122,22 @@ async function gerarPropostaPDF(lead) {
 
   // ================= NUMERO PROPOSTA =================
   let numeroProposta = lead.numero_proposta;
-
   if (!numeroProposta) {
     numeroProposta = await gerarNumeroProposta();
+ 
+    const { data, erro } = await window.supabaseClient
+    .from("leads")
+    .update({
+      numero_proposta: numeroProposta
+    })
+    .eq("id", lead.id)
+    .select();
 
-    await fetch(`${SUPABASE_URL}/rest/v1/leads?id=eq.${lead.id}`, {
-      method: "PATCH",
-      headers: {
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        numero_proposta: numeroProposta
-      })
-    });
+  if (erro) {
+    console.error("Erro atualizando numero_proposta:", erro);
+  } else {
+    console.log("Proposta atualizada:", data);
+  }
   }
 
   const dataAtual = new Date().toLocaleDateString("pt-BR");
@@ -210,7 +229,22 @@ Modelo de contratação: ${lead.modelo_contratacao}`
     "Esta proposta é válida por 15 dias."
   );
 
-  doc.save(`Proposta-${numeroProposta}.pdf`);
+const caminhoArquivo =
+  `propostas/${lead.id}/Proposta-${numeroProposta}.pdf`;
+
+const urlProposta =
+  await uploadDocumentoPDF(doc, caminhoArquivo);
+
+// salvar url no banco
+await window.supabaseClient
+  .from("clientes")
+  .update({
+    proposta_url: urlProposta
+  })
+  .eq("lead_id", lead.id);
+
+  // download local (mantemos seu comportamento atual)
+  //doc.save(`Proposta-${numeroProposta}.pdf`);
 }
 
 
@@ -244,6 +278,25 @@ async function gerarNumeroContrato() {
 }
 
 async function gerarContratoPDF(lead) {
+
+if (!lead?.id) {
+    console.error("Lead inválido:", lead);
+    return;
+  }
+
+// ================= VERIFICAR CONTRATO EXISTENTE =================
+const { data: clienteExistente } = await window.supabaseClient
+  .from("clientes")
+  .select("contrato_url")
+  .eq("lead_id", lead.id)
+  .maybeSingle();
+
+if (clienteExistente?.contrato_url) {
+
+  visualizarContrato(lead.id);
+
+  return;
+}
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -308,21 +361,15 @@ async function gerarContratoPDF(lead) {
 
   // ================= NUMERO CONTRATO =================
   let numeroContrato = lead.numero_contrato;
-
   if (!numeroContrato) {
     numeroContrato = await gerarNumeroContrato();
-
-    await fetch(`${SUPABASE_URL}/rest/v1/leads?id=eq.${lead.id}`, {
-      method: "PATCH",
-      headers: {
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
+    // salvar url no banco
+    await window.supabaseClient
+      .from("leads")
+      .update({
         numero_contrato: numeroContrato
       })
-    });
+      .eq("id", lead.id);
   }
 
   const dataAtual = new Date().toLocaleDateString("pt-BR");
@@ -413,5 +460,90 @@ Em caso de atraso, incidirá multa de 2% sobre o valor devido, acrescida de juro
     `Fica eleito o Foro da Comarca de São Paulo – SP para dirimir quaisquer controvérsias oriundas deste contrato.`
   );
 
-  doc.save(`Contrato-${numeroContrato}.pdf`);
+const caminhoArquivo =
+  `contratos/${lead.id}/Contrato-${numeroContrato}.pdf`;
+
+const urlContrato =
+  await uploadDocumentoPDF(doc, caminhoArquivo);
+
+// salvar url no banco
+await window.supabaseClient
+  .from("clientes")
+  .update({
+    contrato_url: caminhoArquivo,
+    numero_contrato: numeroContrato
+  })
+  .eq("lead_id", lead.id);
+
+  // download local
+  //doc.save(`Contrato-${numeroContrato}.pdf`);
+}
+
+async function uploadDocumentoPDF(doc, caminhoArquivo) {
+
+  const blob = doc.output("blob");
+
+  const { data, error } = await window.supabaseClient
+    .storage
+    .from("documentos-clientes")
+    .upload(caminhoArquivo, blob, {
+      contentType: "application/pdf",
+      upsert: true
+    });
+
+  if (error) {
+    console.error("Erro upload PDF:", error);
+    throw error;
+  }
+
+  const { data: urlData } = window.supabaseClient
+    .storage
+    .from("documentos-clientes")
+    .getPublicUrl(caminhoArquivo);
+
+  return urlData.publicUrl;
+}
+
+async function visualizarProposta(leadId) {
+
+  const { data } = await window.supabaseClient
+    .from("clientes")
+    .select("proposta_url")
+    .eq("lead_id", leadId)
+    .maybeSingle();
+
+  if (!data?.proposta_url) {
+    showToast("Proposta ainda não foi gerada.", false);
+    return;
+  }
+
+  const { data: urlData } =
+    window.supabaseClient.storage
+      .from("documentos-clientes")
+      .getPublicUrl(data.proposta_url);
+
+  window.open(urlData.publicUrl, "_blank");
+
+}
+
+async function visualizarContrato(leadId) {
+
+  const { data } = await window.supabaseClient
+    .from("clientes")
+    .select("contrato_url")
+    .eq("lead_id", leadId)
+    .maybeSingle();
+
+  if (!data?.contrato_url) {
+    showToast("Contrato ainda não foi gerado.", false);
+    return;
+  }
+
+  const { data: urlData } =
+    window.supabaseClient.storage
+      .from("documentos-clientes")
+      .getPublicUrl(data.contrato_url);
+
+  window.open(urlData.publicUrl, "_blank");
+
 }

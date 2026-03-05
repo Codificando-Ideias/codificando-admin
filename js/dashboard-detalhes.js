@@ -73,7 +73,7 @@ if (estimativa.tipoPagamento === "projeto") {
 <select id="statusSelect" class="form-select mt-1"></select>
 
 <button class="btn btn-sm btn-success mt-2"
-  onclick="atualizarStatus('${lead.id}')">
+  onclick="atualizarStatus(leadAtual)">
   Salvar Status
 </button>
 </div>
@@ -132,55 +132,90 @@ if (emailEl) {
   modal.show();
 }
 
-function renderizarBotoesStatus(status) {
+async function renderizarBotoesStatus(status) {
 
   const container = document.getElementById("acoesContrato");
   container.innerHTML = "";
 
-  const faseComercial = ["Proposta", "Aguardando Aprovação"];
-  const faseContrato = ["Contrato", "Em Desenvolvimento", "Homologação", "Fechado"];
-  const faseOperacional = ["Em Desenvolvimento", "Homologação"];
+  const ordemStatus = [
+    "Novo",
+    "Contato",
+    "Em Análise",
+    "Proposta",
+    "Contrato",
+    "Aguardando Pagamento",
+    "Em Desenvolvimento",
+    "Homologação",
+    "Aguardando Produção",
+    "Fechado"
+  ];
+
+  const indexAtual = ordemStatus.indexOf(status);
+
+  // buscar dados do cliente
+  const { data: cliente } = await window.supabaseClient
+    .from("clientes")
+    .select("proposta_url, contrato_url")
+    .eq("lead_id", leadAtual.id)
+    .maybeSingle();
+
+  const propostaExiste = cliente?.proposta_url;
+  const contratoExiste = cliente?.contrato_url;
 
   // ======================
   // 📄 PROPOSTA
   // ======================
-  if (faseComercial.includes(status)) {
-    container.innerHTML += `
-      <button class="btn btn-primary"
-        onclick="gerarPropostaPDF(leadAtual)">
-        📄 Gerar Proposta
-      </button>
-    `;
-  }
 
-  if (faseContrato.includes(status)) {
-    container.innerHTML += `
-      <button class="btn btn-primary"
-        onclick="gerarPropostaPDF(leadAtual)">
-        📄 Visualizar Proposta
-      </button>
-    `;
+  if (indexAtual >= ordemStatus.indexOf("Proposta")) {
+
+    if (propostaExiste) {
+
+      container.innerHTML += `
+        <button class="btn btn-primary"
+          onclick="visualizarProposta('${leadAtual.id}')">
+          📄 Visualizar Proposta
+        </button>
+      `;
+
+    } else {
+
+      container.innerHTML += `
+        <button class="btn btn-primary"
+          onclick="gerarPropostaPDF(leadAtual)">
+          📄 Gerar Proposta
+        </button>
+      `;
+
+    }
+
   }
 
   // ======================
   // 📝 CONTRATO
   // ======================
-  if (status === "Contrato") {
-    container.innerHTML += `
-      <button class="btn btn-success"
-        onclick="gerarContratoPDF(leadAtual)">
-        📝 Gerar Contrato
-      </button>
-    `;
-  }
 
-  if (faseOperacional.includes(status) || status === "Fechado") {
-    container.innerHTML += `
-      <button class="btn btn-success"
-        onclick="gerarContratoPDF(leadAtual)">
-        📝 Visualizar Contrato
-      </button>
-    `;
+  if (indexAtual >= ordemStatus.indexOf("Contrato")) {
+
+    if (contratoExiste) {
+
+      container.innerHTML += `
+        <button class="btn btn-success"
+          onclick="visualizarContrato('${leadAtual.id}')">
+          📝 Visualizar Contrato
+        </button>
+      `;
+
+    } else {
+
+      container.innerHTML += `
+        <button class="btn btn-success"
+          onclick="gerarContratoPDF(leadAtual)">
+          📝 Gerar Contrato
+        </button>
+      `;
+
+    }
+
   }
 
 }
