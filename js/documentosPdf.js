@@ -73,7 +73,7 @@ if (clienteExistente?.proposta_url) {
     doc.setFontSize(9);
     doc.setTextColor(120);
     doc.text(
-      "Codificando Ideias | www.codificandoideais.site | contato@codificandoideais.site",
+      "Codificando Ideias | www.codificandoideias.com | codificandoideias@outlook.com",
       20,
       290
     );
@@ -324,7 +324,7 @@ if (clienteExistente?.contrato_url) {
     doc.setFontSize(9);
     doc.setTextColor(120);
     doc.text(
-      "Codificando Ideias | www.codificandoideais.site | contato@codificandoideais.site",
+      "Codificando Ideias | www.codificandoideias.com | codificandoideias@outlook.com",
       20,
       290
     );
