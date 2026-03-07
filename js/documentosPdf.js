@@ -239,7 +239,8 @@ const urlProposta =
 await window.supabaseClient
   .from("clientes")
   .update({
-    proposta_url: urlProposta
+    numero_proposta: numeroProposta,
+    proposta_url: caminhoArquivo
   })
   .eq("lead_id", lead.id);
 
@@ -363,7 +364,7 @@ if (clienteExistente?.contrato_url) {
   let numeroContrato = lead.numero_contrato;
   if (!numeroContrato) {
     numeroContrato = await gerarNumeroContrato();
-    // salvar url no banco
+    // salvar numeroContrato no banco
     await window.supabaseClient
       .from("leads")
       .update({

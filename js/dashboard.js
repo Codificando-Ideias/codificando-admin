@@ -618,7 +618,14 @@ if (!leadAtual?.id) {
       .eq("id", leadAtual.id);
 
     if (error) throw error;
-    
+
+    // ======================
+    // 📝 Proposta
+    // ======================
+    if (novoStatus === "Proposta") {
+
+    await liberarPortal(leadAtual.id);
+
     // Atualiza cliente se existir
     const { data: cliente } = await supabaseLogin
     .from("clientes")
@@ -627,20 +634,19 @@ if (!leadAtual?.id) {
     .maybeSingle();
 
   if (cliente) {
+    const estimativa = calcularEstimativa(leadAtual);
 
     await supabaseLogin
       .from("clientes")
-      .update({ status: novoStatus })
+      .update({ 
+        status: novoStatus,
+        valor_proposta: estimativa.valorFinal || null,
+        prazo_estimado: `${estimativa.horasEstimadas}h • ${estimativa.mesesEstimados} mês(es)` || null,
+       })
       .eq("id", cliente.id);
-
   }
 
-    // ======================
-    // 📝 Proposta
-    // ======================
-    if (novoStatus === "Proposta") {
       await gerarPropostaPDF(leadAtual);
-      await liberarPortal(leadAtual.id);
     }
 
     if (novoStatus === "Contrato") {
