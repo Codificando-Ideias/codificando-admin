@@ -36,43 +36,54 @@
   </h3>
 
   <!-- Ações -->
-  <div class="d-flex align-items-center gap-4">
+<div class="d-flex align-items-center gap-3">
 
-    <!-- Filtro -->
-    <select id="filtroStatus"
-            class="form-select bg-dark text-light border-secondary"
-            style="width: 180px;">
-      <option value="">Todos Status</option>
-      <option value="Novo">Novo</option>
-      <option value="Contato">Contato</option>
-      <option value="Proposta">Proposta</option>
-      <option value="Contrato">Contrato</option>
-      <option value="Fechado">Fechado</option>
-    </select>
+  <!-- Botão Postagens -->
+  <a href="postagens.html"
+     class="btn btn-outline-info d-flex align-items-center gap-2">
+    <i class="bi bi-pencil-square"></i>
+    Postagens
+  </a>
 
-    <!-- Usuário Dropdown -->
-    <div class="dropdown">
-      <button class="btn btn-dark border-secondary d-flex align-items-center gap-2 dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
+  <!-- Filtro -->
+  <select id="filtroStatus"
+          class="form-select bg-dark text-light border-secondary"
+          style="width: 180px;">
+    <option value="">Todos Status</option>
+    <option value="Novo">Novo</option>
+    <option value="Contato">Contato</option>
+    <option value="Proposta">Proposta</option>
+    <option value="Contrato">Contrato</option>
+    <option value="Fechado">Fechado</option>
+  </select>
 
-        <i class="bi bi-person-circle fs-5"></i>
-        <span id="adminNome">Admin</span>
-      </button>
+  <!-- Usuário Dropdown -->
+  <div class="dropdown">
+    <button class="btn btn-dark border-secondary d-flex align-items-center gap-2 dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
 
-      <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary">
-        <li>
-          <button class="dropdown-item text-light bg-dark"
-                  onclick="logout()">
-            <i class="bi bi-box-arrow-right me-2"></i>
-            Sair
-          </button>
-        </li>
-      </ul>
-    </div>
+      <i class="bi bi-person-circle fs-5"></i>
+      <span id="adminNome">Admin</span>
+
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary">
+
+      <li>
+        <button class="dropdown-item text-light bg-dark"
+                onclick="logout()">
+          <i class="bi bi-box-arrow-right me-2"></i>
+          Sair
+        </button>
+      </li>
+
+    </ul>
 
   </div>
+
+</div>
 
 </div>
   <!-- KPIs PRINCIPAIS -->

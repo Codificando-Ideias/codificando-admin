@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Postagens - Codificando Ideias</title>
+
+<link rel="icon" href="../assets/favicon.ico">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<link href="../css/postagens.css" rel="stylesheet">
+
+</head>
+
+<body class="text-light">
+
+<div class="admin-wrapper">
+
+<!-- HEADER -->
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+  <!-- ESQUERDA -->
+  <h3 class="fw-bold mb-0">
+    <i class="bi bi-pencil-square me-2"></i>
+    Postagens
+  </h3>
+
+  <!-- DIREITA -->
+  <div class="d-flex align-items-center gap-3">
+
+    <a href="dashboard.html"
+       class="btn btn-dark border-secondary">
+       <i class="bi bi-arrow-left me-2"></i>
+       Dashboard
+    </a>
+
+    <!-- Usuário Dropdown -->
+    <div class="dropdown">
+      <button class="btn btn-dark border-secondary d-flex align-items-center gap-2 dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+
+        <i class="bi bi-person-circle fs-5"></i>
+        <span id="adminNome">Admin</span>
+
+      </button>
+
+      <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary">
+
+        <li>
+          <button class="dropdown-item text-light bg-dark"
+                  onclick="logout()">
+            <i class="bi bi-box-arrow-right me-2"></i>
+            Sair
+          </button>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="tabs-posts mb-4">
+
+<ul class="nav nav-pills">
+
+<li class="nav-item">
+<button class="nav-link active"
+onclick="trocarAba('pendente')"
+id="tab-pendente">
+
+Pendentes
+<span class="badge bg-secondary ms-2" id="count-pendente">0</span>
+
+</button>
+</li>
+
+<li class="nav-item">
+<button class="nav-link"
+onclick="trocarAba('publicado')"
+id="tab-publicado">
+
+Publicados
+<span class="badge bg-secondary ms-2" id="count-publicado">0</span>
+
+</button>
+</li>
+
+</ul>
+
+</div>
+
+
+
+<!-- LISTA POSTS -->
+<div id="loadingPosts" class="text-center py-5 d-none">
+
+<div class="spinner-border text-info mb-3"></div>
+
+<div class="text-secondary">
+Carregando posts...
+</div>
+
+</div>
+
+<div id="emptyState" class="text-center py-5 d-none">
+
+<i class="bi bi-inbox fs-1 text-secondary"></i>
+
+<p class="mt-3 text-secondary">
+Nenhum conteúdo encontrado nesta aba.
+</p>
+
+</div>
+<div id="listaPosts" class="row g-4"></div>
+
+</div>
+
+
+<!-- MODAL EDITAR -->
+
+<div class="modal fade" id="modalEditar" tabindex="-1">
+
+<div class="modal-dialog modal-lg modal-dialog-centered">
+
+<div class="modal-content bg-dark text-light border-secondary">
+
+<div class="modal-header border-secondary">
+
+<h5 class="modal-title">
+Editar Conteúdo
+</h5>
+
+<button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+
+</div>
+
+<div class="modal-body">
+
+<textarea id="editorTexto"
+          class="form-control bg-dark text-light"
+          rows="12"></textarea>
+
+<input type="hidden" id="editorCampo">
+<input type="hidden" id="editorId">
+
+</div>
+
+<div class="modal-footer border-secondary">
+
+<button class="btn btn-secondary"
+        data-bs-dismiss="modal">
+Cancelar
+</button>
+
+<button class="btn btn-success"
+        onclick="salvarEdicao()">
+Salvar
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+  <div id="liveToast" class="toast align-items-center text-bg-success border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body">
+        Mensagem enviada com sucesso!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<footer class="admin-footer">
+
+<div class="container text-center">
+
+<div class="footer-title">
+Publicar nas redes
+</div>
+
+<div class="footer-social">
+
+<a href="https://www.linkedin.com/company/codificando-ideias/"
+target="_blank"
+class="social-icon linkedin">
+
+<i class="bi bi-linkedin"></i>
+
+<span>LinkedIn</span>
+
+</a>
+
+<a href="https://www.instagram.com/codificando.ideias"
+target="_blank"
+class="social-icon instagram">
+
+<i class="bi bi-instagram"></i>
+
+<span>Instagram</span>
+
+</a>
+
+<a href="https://threads.net"
+target="_blank"
+class="social-icon threads">
+
+<i class="bi bi-chat-dots"></i>
+
+<span>Threads</span>
+
+</a>
+
+<a href="https://web.whatsapp.com"
+target="_blank"
+class="social-icon whatsapp">
+
+<i class="bi bi-whatsapp"></i>
+
+<span>WhatsApp</span>
+
+</a>
+
+<a href="https://codificandoideias.substack.com/"
+target="_blank"
+class="social-icon substack">
+
+<i class="bi bi-envelope"></i>
+
+<span>Newsletter</span>
+
+</a>
+
+</div>
+
+</div>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/configSettings.js"></script>
+<script src="../js/login/supabaseClient.js"></script>
+<script src="../js/toast.js"></script>
+
+<script src="../js/postagens.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

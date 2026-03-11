@@ -1,0 +1,524 @@
+/* =================================
+ROOT
+================================= */
+
+:root{
+
+--bg:#0B1120;
+--bg-card:#111827;
+--border:#1f2937;
+
+--accent:#2563EB;
+--accent2:#7C3AED;
+
+--text:#F8FAFC;
+--muted:#94a3b8;
+
+}
+
+
+/* =================================
+PAGE
+================================= */
+
+body{
+background:var(--bg);
+color:var(--text);
+font-family:system-ui;
+}
+
+
+/* =================================
+HEADER
+================================= */
+
+.page-header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+margin-bottom:40px;
+
+}
+
+.page-title{
+
+font-size:1.6rem;
+font-weight:600;
+
+display:flex;
+align-items:center;
+gap:10px;
+
+}
+
+
+/* =================================
+GRID POSTS
+================================= */
+
+#listaPosts{
+
+max-width:1400px;
+margin:auto;
+
+}
+
+/* =================================
+POST CARD
+================================= */
+
+.post-card{
+
+background:var(--bg-card);
+
+border:1px solid var(--border);
+
+border-radius:14px;
+
+padding:35px 40px;
+
+width:100%;
+
+box-shadow:0 5px 20px rgba(0,0,0,.35);
+
+transition:.3s;
+
+}
+
+.post-card:hover{
+
+border-color:var(--accent);
+
+transform:translateY(-3px);
+
+}
+
+
+/* =================================
+POST HEADER
+================================= */
+
+.post-header{
+
+margin-bottom:25px;
+
+}
+
+.post-title{
+
+font-size:1.25rem;
+font-weight:600;
+
+}
+
+.post-date{
+
+color:var(--muted);
+font-size:.85rem;
+
+}
+
+
+/* =================================
+CONTENT BLOCK
+================================= */
+
+.post-block{
+
+margin-top:18px;
+
+}
+
+.post-block-header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+margin-bottom:6px;
+
+}
+
+.post-label{
+
+font-size:.9rem;
+color:var(--muted);
+font-weight:500;
+
+}
+
+
+/* =================================
+TEXTAREA CONTENT
+================================= */
+
+.post-content{
+
+width:100%;
+
+background:#020617;
+
+border:1px solid #1f2937;
+
+color:#e2e8f0;
+
+border-radius:8px;
+
+padding:14px;
+
+font-size:.95rem;
+
+line-height:1.6;
+
+min-height:140px;
+
+resize:vertical;
+
+transition:.2s;
+
+display:block;
+
+}
+
+.post-content:focus{
+
+border-color:#2563EB;
+
+box-shadow:0 0 0 1px #2563EB;
+
+outline:none;
+
+}
+
+.tabs-posts{
+
+display:flex;
+justify-content:center;
+
+}
+
+.nav-pills .nav-link{
+
+background:#111827;
+color:#cbd5e1;
+border:1px solid #1f2937;
+
+}
+
+.nav-pills .nav-link.active{
+
+background:linear-gradient(45deg,#2563EB,#7C3AED);
+border:none;
+color:white;
+
+}
+
+
+/* =================================
+ACTION BUTTONS
+================================= */
+
+.post-actions{
+
+display:flex;
+gap:6px;
+
+}
+
+.btn-copy{
+
+background:transparent;
+
+border:1px solid #0891b2;
+
+color:#22d3ee;
+
+width:34px;
+height:34px;
+
+border-radius:6px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+transition:.2s;
+
+}
+
+.btn-copy:hover{
+
+background:#0891b2;
+
+color:white;
+
+}
+
+.btn-edit{
+
+background:transparent;
+
+border:1px solid #f59e0b;
+
+color:#fbbf24;
+
+width:34px;
+height:34px;
+
+border-radius:6px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+transition:.2s;
+
+}
+
+.btn-edit:hover{
+
+background:#f59e0b;
+
+color:black;
+
+}
+
+
+/* =================================
+CHANNEL COLORS
+================================= */
+
+.channel-linkedin{
+border-left:4px solid #0A66C2;
+padding-left:10px;
+}
+
+.channel-threads{
+border-left:4px solid #9333ea;
+padding-left:10px;
+}
+
+.channel-reels{
+border-left:4px solid #ef4444;
+padding-left:10px;
+}
+
+.channel-newsletter{
+border-left:4px solid #22c55e;
+padding-left:10px;
+}
+
+.channel-whatsapp{
+border-left:4px solid #25D366;
+padding-left:10px;
+}
+
+/* =================================
+ADMIN LAYOUT
+================================= */
+
+.admin-wrapper{
+
+max-width:1500px;
+margin:auto;
+
+padding:40px 40px;
+
+}
+
+/* ================================
+COLLAPSE TOGGLE
+================================ */
+
+.collapse-toggle{
+
+background:none;
+border:none;
+
+color:var(--text);
+
+font-weight:600;
+
+display:flex;
+align-items:center;
+gap:8px;
+
+cursor:pointer;
+
+padding:0;
+
+font-size:.95rem;
+
+}
+
+.collapse-toggle i{
+
+font-size:.8rem;
+
+opacity:.6;
+
+transition:.2s;
+
+}
+
+.collapse.show + textarea{
+
+margin-top:8px;
+
+}
+
+.collapse-toggle[aria-expanded="true"] i{
+transform:rotate(180deg);
+}
+
+/* ===============================
+ADMIN FOOTER
+=============================== */
+
+.admin-footer{
+
+margin-top:80px;
+
+padding:40px 0;
+
+border-top:1px solid #1f2937;
+
+background:#020617;
+
+}
+
+.footer-title{
+
+font-size:.9rem;
+
+color:#94a3b8;
+
+margin-bottom:20px;
+
+text-transform:uppercase;
+
+letter-spacing:.05em;
+
+}
+
+.footer-social{
+
+display:flex;
+
+justify-content:center;
+
+flex-wrap:wrap;
+
+gap:18px;
+
+}
+
+.social-icon{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+gap:6px;
+
+text-decoration:none;
+
+color:#cbd5e1;
+
+font-size:.85rem;
+
+transition:.2s;
+
+}
+
+.social-icon i{
+
+font-size:1.6rem;
+
+}
+
+.social-icon:hover{
+
+transform:translateY(-3px);
+
+color:white;
+
+}
+
+.social-icon.linkedin:hover{
+
+color:#0A66C2;
+
+}
+
+.social-icon.instagram:hover{
+
+color:#E1306C;
+
+}
+
+.social-icon.threads:hover{
+
+color:#9333ea;
+
+}
+
+.social-icon.whatsapp:hover{
+
+color:#25D366;
+
+}
+
+.social-icon.substack:hover{
+
+color:#FF6719;
+
+}
+
+/* ============================
+POST HEADER
+============================ */
+
+.post-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:20px;
+
+}
+
+.post-header .btn{
+
+display:flex;
+align-items:center;
+gap:6px;
+
+}
+
+/* =================================
+RESPONSIVE
+================================= */
+
+@media(max-width:900px){
+
+.post-card{
+
+padding:22px;
+
+}
+
+.post-content{
+
+font-size:.85rem;
+
+}
+
+}
